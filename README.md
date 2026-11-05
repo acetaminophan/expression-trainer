@@ -85,12 +85,15 @@ npm start
   - `like` 只在口头禅位置（"it was like, um"）才算填充词，作动词 / 介词（"I like it"、"like this one"）不标记
 - **实时提示**：英文教练 prompt，每次一条 ≤ 6 词；在中文版规则之外额外加了语法错误和不地道表达的即时纠正
 - **分析报告**：英文版六维报告，多一节「Language accuracy」表格，列出语法 / 搭配 / 语序问题和地道说法
-- **语音识别**：英文模式自动改用 Sherpa-ONNX 的英文 zipformer 流式模型（识别率明显高于双语模型）；没下载时自动退回双语模型并在反馈栏提示。下载方式：
+- **语音识别**：英文模式按以下优先级自动选模型，没下载时退回下一档（退到双语模型时会在反馈栏提示）：
+  1. NVIDIA NeMo 流式 FastConformer（推荐，训练数据广、对非母语口音友好，约 470 MB）
+  2. Sherpa 英文 zipformer（只用有声书训练，口音适应性一般，约 300 MB）
+  3. 中英双语 paraformer（中文模式用的那个）
 
 ```bash
 cd models
-wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-en-2023-06-26.tar.bz2
-tar xvf sherpa-onnx-streaming-zipformer-en-2023-06-26.tar.bz2
+wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-streaming-fast-conformer-transducer-en-480ms.tar.bz2
+tar xvf sherpa-onnx-nemo-streaming-fast-conformer-transducer-en-480ms.tar.bz2
 ```
 
 ## 字幕颜色含义

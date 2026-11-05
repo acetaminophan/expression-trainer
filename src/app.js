@@ -110,7 +110,7 @@ class ExpressionTrainer {
       this.showError(`语音识别启动失败: ${initResult.error}`);
       return;
     }
-    if (this.isEnglish() && initResult.model && initResult.model !== 'zipformer_en') {
+    if (this.isEnglish() && initResult.model === 'paraformer_zh_en') {
       this.addFeedbackItem('English ASR model not found, using bilingual model (see README)', 'ai');
     }
 
