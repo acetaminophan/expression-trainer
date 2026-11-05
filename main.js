@@ -279,10 +279,10 @@ ipcMain.handle('init-asr', async () => {
 });
 
 // 接收渲染进程发来的音频数据
-ipcMain.handle('feed-audio', (event, samplesArray) => {
+ipcMain.handle('feed-audio', (event, samplesArray, sampleRate) => {
   if (!asrReady) return null;
   const samples = new Float32Array(samplesArray);
-  const result = feedAudio(samples);
+  const result = feedAudio(samples, sampleRate || 16000);
   return result; // { text, isFinal } or null
 });
 
