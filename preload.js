@@ -23,8 +23,11 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.removeAllListeners('asr-result');
   },
 
-  // 词库分析
+  // 词库分析 / 字幕高亮 / 语言
   analyzeText: (text) => ipcRenderer.invoke('analyze-text', text),
+  highlightText: (text) => ipcRenderer.invoke('highlight-text', text),
+  getLanguage: () => ipcRenderer.invoke('get-language'),
+  setLanguage: (lang) => ipcRenderer.invoke('set-language', lang),
 
   // AI反馈
   getRealtimeFeedback: (text) => ipcRenderer.invoke('get-realtime-feedback', text),

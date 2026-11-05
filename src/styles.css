@@ -295,3 +295,15 @@ button, input, select, .subtitle-scroll, .feedback-content, .modal-body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Language toggle (zh / en) */
+.btn-language {
+  font-size: 13px;
+  font-weight: 700;
+  color: #E5007E;
+  border: 1px solid #E5007E;
+  border-radius: 6px;
+  padding: 2px 8px;
+  line-height: 1.4;
+}
+.btn-language:hover { background: rgba(229, 0, 126, 0.15); }

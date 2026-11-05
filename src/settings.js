@@ -36,6 +36,7 @@ const PROVIDER_CONFIG = {
 class SettingsPage {
   constructor() {
     this.providerSelect = document.getElementById('provider');
+    this.languageSelect = document.getElementById('language');
     this.apikeyInput = document.getElementById('apikey');
     this.apikeyHint = document.getElementById('apikey-hint');
     this.modelSelect = document.getElementById('model');
@@ -64,6 +65,7 @@ class SettingsPage {
     this.settings = await window.api.getSettings();
 
     this.providerSelect.value = this.settings.provider || 'deepseek';
+    this.languageSelect.value = this.settings.language || 'zh';
 
     // 先填充模型列表再加载字段值
     this.onProviderChange();
@@ -130,6 +132,7 @@ class SettingsPage {
 
     // 只更新当前 provider 的配置
     settings.provider = provider;
+    settings.language = this.languageSelect.value === 'en' ? 'en' : 'zh';
     if (!settings.providers) {
       settings.providers = {};
     }

@@ -13,9 +13,36 @@ class ExpressionTrainer {
     this.stats = { fillers: 0, hedges: 0, vagueWords: 0, totalWords: 0, duration: 0 };
     this.lastFeedbackText = '';
     this.lastReport = '';
+    this.language = 'zh';
 
     this.initElements();
     this.bindEvents();
+    this.loadLanguage();
+  }
+
+  // ===== Language (zh / en) =====
+
+  async loadLanguage() {
+    this.language = await window.api.getLanguage();
+    this.updateLanguageButton();
+  }
+
+  async toggleLanguage() {
+    const next = this.language === 'en' ? 'zh' : 'en';
+    this.language = await window.api.setLanguage(next);
+    this.updateLanguageButton();
+    this.addFeedbackItem(this.language === 'en' ? 'English mode: fillers / hedges / vague words in English' : '中文模式', 'ai');
+  }
+
+  updateLanguageButton() {
+    if (!this.btnLanguage) return;
+    this.btnLanguage.textContent = this.language === 'en' ? 'EN' : '中';
+    this.btnLanguage.title = this.language === 'en' ? 'Practice language: English (click to switch to Chinese)' : '练习语言：中文（点击切换为英文）';
+    document.documentElement.lang = this.language === 'en' ? 'en' : 'zh-CN';
+  }
+
+  isEnglish() {
+    return this.language === 'en';
   }
 
   initElements() {
@@ -26,6 +53,7 @@ class ExpressionTrainer {
     this.btnStop = document.getElementById('btn-stop');
     this.btnReport = document.getElementById('btn-report');
     this.btnSettings = document.getElementById('btn-settings');
+    this.btnLanguage = document.getElementById('btn-language');
     this.btnCloseReport = document.getElementById('btn-close-report');
     this.btnClosePaste = document.getElementById('btn-close-paste');
     this.btnAnalyzePaste = document.getElementById('btn-analyze-paste');
@@ -55,6 +83,9 @@ class ExpressionTrainer {
     this.btnStop.addEventListener('click', () => this.stopRecording());
     this.btnReport.addEventListener('click', () => this.generateReport());
     this.btnSettings.addEventListener('click', () => window.api.openSettings());
+    this.btnLanguage.addEventListener('click', () => this.toggleLanguage());
+    // Settings window may change the language; refresh when we regain focus
+    window.addEventListener('focus', () => this.loadLanguage());
     document.getElementById('btn-prompt-editor').addEventListener('click', () => window.api.openPromptEditor());
     this.btnCloseReport.addEventListener('click', () => this.reportModal.classList.add('hidden'));
     this.btnCopyReport.addEventListener('click', () => {
@@ -78,6 +109,9 @@ class ExpressionTrainer {
     if (!initResult.success) {
       this.showError(`语音识别启动失败: ${initResult.error}`);
       return;
+    }
+    if (this.isEnglish() && initResult.model && initResult.model !== 'zipformer_en') {
+      this.addFeedbackItem('English ASR model not found, using bilingual model (see README)', 'ai');
     }
 
     try {
@@ -169,18 +203,20 @@ class ExpressionTrainer {
   handleASRResult({ text, isFinal }) {
     if (isFinal) {
       this.sentences.push(text);
-      this.fullText += text;
+      // English sentences need a separator; Chinese ones do not
+      this.fullText += (this.isEnglish() && this.fullText && !/\s$/.test(this.fullText)) ? ' ' + text : text;
       this.analyzeCurrentSentence(text);
 
-      // 每30字触发一次AI反馈（语境化精准词建议）
-      if (this.fullText.length - this.lastFeedbackText.length >= 30) {
+      // Trigger AI feedback every ~30 Chinese chars or ~150 English chars
+      const threshold = this.isEnglish() ? 150 : 30;
+      if (this.fullText.length - this.lastFeedbackText.length >= threshold) {
         this.requestRealtimeFeedback();
       }
     }
     this.renderSubtitle(text, isFinal);
   }
 
-  renderSubtitle(currentText, isFinal) {
+  async renderSubtitle(currentText, isFinal) {
     if (isFinal) {
       // 移除interim
       const interim = this.subtitleContainer.querySelector('.interim-line');
@@ -194,8 +230,9 @@ class ExpressionTrainer {
       // 新行
       const line = document.createElement('div');
       line.className = 'subtitle-line';
-      line.innerHTML = this.highlightText(currentText);
+      line.textContent = currentText;
       this.subtitleContainer.appendChild(line);
+      line.innerHTML = await this.highlightText(currentText);
     } else {
       let interim = this.subtitleContainer.querySelector('.interim-line');
       if (!interim) {
@@ -210,17 +247,13 @@ class ExpressionTrainer {
     this.subtitleScroll.scrollTop = this.subtitleScroll.scrollHeight;
   }
 
-  highlightText(text) {
-    let result = text;
-    const vagueWords = ['开心','难过','害怕','生气','不舒服','很好','很多','很快','很大','很小','好看','不好','喜欢','讨厌','觉得','想想'];
-    vagueWords.forEach(w => {
-      result = result.replace(new RegExp(w, 'g'), `<span class="vague">${w}</span>`);
-    });
-    const fillerPatterns = /(嗯|啊|呃|额|那个|就是|然后|这个|对吧|是吧|反正|基本上)/g;
-    result = result.replace(fillerPatterns, '<span class="filler">$1</span>');
-    const hedgePatterns = /(可能|也许|大概|应该|我觉得|好像|似乎|或许|不一定|差不多|感觉)/g;
-    result = result.replace(hedgePatterns, '<span class="hedge">$1</span>');
-    return result;
+  /** Highlighting is done in the main process so both languages share one lexicon. */
+  async highlightText(text) {
+    try {
+      return await window.api.highlightText(text);
+    } catch (e) {
+      return text;
+    }
   }
 
   // ===== 分析 =====
@@ -234,21 +267,22 @@ class ExpressionTrainer {
       this.stats.totalWords += analysis.totalWords;
       this.updateStatsDisplay();
       // 碰到笼统词 → 立刻在反馈栏弹出替换建议
+      const en = analysis.language === 'en';
       if (analysis.vagueWords && analysis.vagueWords.length > 0) {
         analysis.vagueWords.forEach(item => {
           const alts = item.alternatives.slice(0, 3).join(' / ');
-          this.addFeedbackItem(`「${item.word}」→ ${alts}`, 'vague');
+          this.addFeedbackItem(en ? `"${item.word}" → ${alts}` : `「${item.word}」→ ${alts}`, 'vague');
         });
       }
       // 碰到填充词 → 弹提醒
       if (analysis.fillers && analysis.fillers.length >= 2) {
         const uniqueFillers = [...new Set(analysis.fillers.map(f => f.word))].slice(0, 3);
-        this.addFeedbackItem(`填充词：${uniqueFillers.join('、')}——试试停顿`, 'filler');
+        this.addFeedbackItem(en ? `Fillers: ${uniqueFillers.join(', ')} — pause instead` : `填充词：${uniqueFillers.join('、')}——试试停顿`, 'filler');
       }
       // 碰到犹豫词 → 弹提醒
       if (analysis.hedges && analysis.hedges.length >= 1) {
         const uniqueHedges = [...new Set(analysis.hedges.map(h => h.word))].slice(0, 2);
-        this.addFeedbackItem(`「${uniqueHedges.join('」「')}」→ 直接说`, 'hedge');
+        this.addFeedbackItem(en ? `"${uniqueHedges.join('", "')}" → just say it` : `「${uniqueHedges.join('」「')}」→ 直接说`, 'hedge');
       }
     }
   }
@@ -278,7 +312,14 @@ class ExpressionTrainer {
   }
 
   classifyFeedback(text) {
-    if (text === '✓' || text.includes('✓')) return 'good';
+    if (text === '✓' || text.includes('✓') || text.includes('⭐')) return 'good';
+    if (this.isEnglish()) {
+      const t = text.toLowerCase();
+      if (/filler|pause instead/.test(t)) return 'filler';
+      if (/hedg|just say it|so what do you think/.test(t)) return 'hedge';
+      if (text.includes('→')) return 'vague';
+      return 'ai';
+    }
     // 填充词相关
     const fillerKeywords = ['嗯','啊','呃','那个','就是','然后','这个','对吧','是吧','反正','基本上','所以说'];
     if (fillerKeywords.some(w => text.includes(`「${w}」`))) return 'filler';
@@ -351,8 +392,10 @@ class ExpressionTrainer {
     const now = new Date();
     const dateStr = now.toISOString().slice(0, 10);
     const timeStr = now.toTimeString().slice(0, 5).replace(':', '');
-    const markdown = `# 表达训练报告\n\n**日期**: ${dateStr}  \n**时长**: ${this.stats.duration}秒  \n**总字数**: ${this.stats.totalWords}  \n\n---\n\n## 完整原文\n\n${this.fullText}\n\n---\n\n${this.lastReport}`;
-    const filename = `表达训练-${dateStr}-${timeStr}.md`;
+    const markdown = this.isEnglish()
+      ? `# Expression Training Report\n\n**Date**: ${dateStr}  \n**Duration**: ${this.stats.duration} s  \n**Words**: ${this.stats.totalWords}  \n\n---\n\n## Full transcript\n\n${this.fullText}\n\n---\n\n${this.lastReport}`
+      : `# 表达训练报告\n\n**日期**: ${dateStr}  \n**时长**: ${this.stats.duration}秒  \n**总字数**: ${this.stats.totalWords}  \n\n---\n\n## 完整原文\n\n${this.fullText}\n\n---\n\n${this.lastReport}`;
+    const filename = this.isEnglish() ? `expression-training-${dateStr}-${timeStr}.md` : `表达训练-${dateStr}-${timeStr}.md`;
 
     try {
       const result = await window.api.saveFile(markdown, filename);
@@ -457,13 +500,13 @@ class ExpressionTrainer {
     this.resetStats();
 
     // 按句号/问号/感叹号/换行分句
-    const sentences = text.split(/(?<=[。！？\n])/g).filter(s => s.trim());
+    const sentences = text.split(this.isEnglish() ? /(?<=[.!?\n])\s*/g : /(?<=[。！？\n])/g).filter(s => s.trim());
     this.sentences = sentences;
 
     for (const sentence of sentences) {
       const line = document.createElement('div');
       line.className = 'subtitle-line';
-      line.innerHTML = this.highlightText(sentence.trim());
+      line.innerHTML = await this.highlightText(sentence.trim());
       this.subtitleContainer.appendChild(line);
 
       // 词库分析

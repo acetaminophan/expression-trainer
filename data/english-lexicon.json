@@ -1,0 +1,635 @@
+{
+  "_meta": {
+    "description": "English spoken-expression lexicon: fillers, hedges, vague words with precise alternatives, emotion words. Phrases are matched on whole words, case-insensitive; multi-word phrases are supported.",
+    "version": "1.0",
+    "counts": {
+      "fillers": 28,
+      "hedges": 31,
+      "vague": 36,
+      "emotions": 42
+    }
+  },
+  "fillers": [
+    "um",
+    "uh",
+    "er",
+    "erm",
+    "hmm",
+    "like",
+    "you know",
+    "I mean",
+    "basically",
+    "actually",
+    "literally",
+    "kind of",
+    "sort of",
+    "kinda",
+    "sorta",
+    "okay so",
+    "so yeah",
+    "yeah so",
+    "at the end of the day",
+    "to be honest",
+    "honestly",
+    "obviously",
+    "and stuff",
+    "or whatever",
+    "and so on",
+    "and things like that",
+    "or something",
+    "stuff like that"
+  ],
+  "hedges": [
+    "I think",
+    "I guess",
+    "I feel like",
+    "I suppose",
+    "I would say",
+    "I'd say",
+    "maybe",
+    "perhaps",
+    "probably",
+    "it seems",
+    "it seems like",
+    "seems like",
+    "it looks like",
+    "a bit",
+    "a little bit",
+    "somewhat",
+    "in a way",
+    "in some sense",
+    "to some extent",
+    "more or less",
+    "roughly",
+    "I'm not sure but",
+    "I don't know if",
+    "it might be",
+    "it could be",
+    "sort of like",
+    "kind of like",
+    "something like that",
+    "I'm not an expert but",
+    "this may be wrong but",
+    "correct me if I'm wrong"
+  ],
+  "vagueToPrecise": {
+    "good": [
+      "effective",
+      "reliable",
+      "compelling",
+      "well-designed",
+      "rigorous",
+      "clear"
+    ],
+    "bad": [
+      "flawed",
+      "unreliable",
+      "inefficient",
+      "harmful",
+      "misleading",
+      "inconsistent"
+    ],
+    "nice": [
+      "elegant",
+      "thoughtful",
+      "generous",
+      "pleasant",
+      "polished"
+    ],
+    "great": [
+      "outstanding",
+      "remarkable",
+      "striking",
+      "decisive",
+      "substantial"
+    ],
+    "amazing": [
+      "striking",
+      "remarkable",
+      "unexpected",
+      "impressive",
+      "extraordinary"
+    ],
+    "awesome": [
+      "impressive",
+      "powerful",
+      "exceptional",
+      "striking"
+    ],
+    "cool": [
+      "clever",
+      "elegant",
+      "novel",
+      "intriguing"
+    ],
+    "interesting": [
+      "surprising",
+      "counterintuitive",
+      "unresolved",
+      "promising",
+      "puzzling",
+      "revealing"
+    ],
+    "important": [
+      "critical",
+      "decisive",
+      "central",
+      "essential",
+      "high-priority",
+      "necessary"
+    ],
+    "big": [
+      "substantial",
+      "large-scale",
+      "pronounced",
+      "extensive",
+      "twofold",
+      "significant"
+    ],
+    "small": [
+      "marginal",
+      "minor",
+      "negligible",
+      "subtle",
+      "modest",
+      "limited"
+    ],
+    "huge": [
+      "massive",
+      "dramatic",
+      "tenfold",
+      "overwhelming",
+      "sweeping"
+    ],
+    "a lot": [
+      "dozens of",
+      "hundreds of",
+      "a majority of",
+      "roughly 80%",
+      "far more than expected"
+    ],
+    "lots of": [
+      "dozens of",
+      "hundreds of",
+      "abundant",
+      "numerous",
+      "a majority of"
+    ],
+    "thing": [
+      "factor",
+      "mechanism",
+      "component",
+      "issue",
+      "step",
+      "variable"
+    ],
+    "things": [
+      "factors",
+      "mechanisms",
+      "components",
+      "issues",
+      "steps",
+      "variables"
+    ],
+    "stuff": [
+      "material",
+      "data",
+      "equipment",
+      "details",
+      "evidence",
+      "reagents"
+    ],
+    "something": [
+      "a signal",
+      "a pattern",
+      "an effect",
+      "a compound",
+      "a mechanism"
+    ],
+    "very": [
+      "markedly",
+      "strikingly",
+      "severely",
+      "intensely",
+      "drop it and pick a stronger word"
+    ],
+    "really": [
+      "genuinely",
+      "markedly",
+      "notably",
+      "drop it and pick a stronger word"
+    ],
+    "weird": [
+      "unexpected",
+      "anomalous",
+      "counterintuitive",
+      "inconsistent",
+      "unusual"
+    ],
+    "fast": [
+      "rapid",
+      "within minutes",
+      "immediate",
+      "accelerated",
+      "in under an hour"
+    ],
+    "slow": [
+      "gradual",
+      "delayed",
+      "sluggish",
+      "over several weeks",
+      "prolonged"
+    ],
+    "hard": [
+      "demanding",
+      "labor-intensive",
+      "technically challenging",
+      "error-prone",
+      "time-consuming"
+    ],
+    "difficult": [
+      "demanding",
+      "labor-intensive",
+      "technically challenging",
+      "error-prone"
+    ],
+    "easy": [
+      "straightforward",
+      "routine",
+      "trivial",
+      "a single step",
+      "quick"
+    ],
+    "happy": [
+      "delighted",
+      "relieved",
+      "thrilled",
+      "satisfied",
+      "grateful"
+    ],
+    "sad": [
+      "disappointed",
+      "discouraged",
+      "frustrated",
+      "heartbroken",
+      "deflated"
+    ],
+    "angry": [
+      "frustrated",
+      "furious",
+      "irritated",
+      "indignant",
+      "exasperated"
+    ],
+    "scared": [
+      "anxious",
+      "worried",
+      "hesitant",
+      "uneasy",
+      "alarmed"
+    ],
+    "worried": [
+      "anxious",
+      "uneasy",
+      "concerned",
+      "apprehensive",
+      "alarmed"
+    ],
+    "tired": [
+      "exhausted",
+      "drained",
+      "burnt out",
+      "weary",
+      "fatigued"
+    ],
+    "problem": [
+      "bottleneck",
+      "limitation",
+      "conflict",
+      "error",
+      "gap",
+      "artifact"
+    ],
+    "nowadays": [
+      "since 2020",
+      "in the last decade",
+      "currently"
+    ],
+    "recently": [
+      "last month",
+      "in the past year",
+      "since March"
+    ],
+    "soon": [
+      "by Friday",
+      "within two weeks",
+      "next month"
+    ]
+  },
+  "intensifiers": {
+    "weak": [
+      "slightly",
+      "somewhat",
+      "marginally",
+      "a touch"
+    ],
+    "medium": [
+      "clearly",
+      "noticeably",
+      "considerably",
+      "substantially"
+    ],
+    "strong": [
+      "markedly",
+      "dramatically",
+      "sharply",
+      "profoundly"
+    ],
+    "extreme": [
+      "overwhelmingly",
+      "completely",
+      "entirely",
+      "beyond doubt"
+    ]
+  },
+  "abstractToConcrete": [
+    {
+      "abstract": "a lot of cells",
+      "concrete": "roughly 300 cells per section"
+    },
+    {
+      "abstract": "it took a long time",
+      "concrete": "it took three weeks"
+    },
+    {
+      "abstract": "the signal was strong",
+      "concrete": "the signal was twice the background"
+    },
+    {
+      "abstract": "it works well",
+      "concrete": "it reaches 95% accuracy on the test set"
+    },
+    {
+      "abstract": "we saw a big difference",
+      "concrete": "the treated group had 40% fewer lesions"
+    },
+    {
+      "abstract": "it is expensive",
+      "concrete": "it costs about 2,000 SEK per run"
+    },
+    {
+      "abstract": "people liked it",
+      "concrete": "eight of ten reviewers rated it useful"
+    },
+    {
+      "abstract": "it happens often",
+      "concrete": "it happens in about one in five samples"
+    }
+  ],
+  "hedgeToDirect": [
+    {
+      "hedge": "I think maybe we could try X",
+      "direct": "Let's try X"
+    },
+    {
+      "hedge": "It seems like it might be related to inflammation",
+      "direct": "It is related to inflammation, because..."
+    },
+    {
+      "hedge": "I'm not sure, but I feel like the data kind of shows",
+      "direct": "The data shows"
+    },
+    {
+      "hedge": "Perhaps it would be a good idea to",
+      "direct": "We should"
+    },
+    {
+      "hedge": "I guess the result is sort of interesting",
+      "direct": "The result is surprising because"
+    },
+    {
+      "hedge": "It could possibly be that",
+      "direct": "The most likely explanation is"
+    },
+    {
+      "hedge": "I'd say it's probably fine",
+      "direct": "It is fine"
+    },
+    {
+      "hedge": "I don't know if this makes sense, but",
+      "direct": "(drop it; say the point)"
+    }
+  ],
+  "emotions": {
+    "delighted": {
+      "category": "joy",
+      "intensity": 8,
+      "polarity": "positive"
+    },
+    "thrilled": {
+      "category": "joy",
+      "intensity": 9,
+      "polarity": "positive"
+    },
+    "relieved": {
+      "category": "joy",
+      "intensity": 6,
+      "polarity": "positive"
+    },
+    "satisfied": {
+      "category": "joy",
+      "intensity": 6,
+      "polarity": "positive"
+    },
+    "grateful": {
+      "category": "joy",
+      "intensity": 7,
+      "polarity": "positive"
+    },
+    "proud": {
+      "category": "joy",
+      "intensity": 7,
+      "polarity": "positive"
+    },
+    "excited": {
+      "category": "joy",
+      "intensity": 8,
+      "polarity": "positive"
+    },
+    "content": {
+      "category": "joy",
+      "intensity": 5,
+      "polarity": "positive"
+    },
+    "hopeful": {
+      "category": "joy",
+      "intensity": 6,
+      "polarity": "positive"
+    },
+    "confident": {
+      "category": "joy",
+      "intensity": 7,
+      "polarity": "positive"
+    },
+    "furious": {
+      "category": "anger",
+      "intensity": 9,
+      "polarity": "negative"
+    },
+    "frustrated": {
+      "category": "anger",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "irritated": {
+      "category": "anger",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "annoyed": {
+      "category": "anger",
+      "intensity": 5,
+      "polarity": "negative"
+    },
+    "indignant": {
+      "category": "anger",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "exasperated": {
+      "category": "anger",
+      "intensity": 8,
+      "polarity": "negative"
+    },
+    "resentful": {
+      "category": "anger",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "disappointed": {
+      "category": "sadness",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "discouraged": {
+      "category": "sadness",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "heartbroken": {
+      "category": "sadness",
+      "intensity": 9,
+      "polarity": "negative"
+    },
+    "deflated": {
+      "category": "sadness",
+      "intensity": 5,
+      "polarity": "negative"
+    },
+    "lonely": {
+      "category": "sadness",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "miserable": {
+      "category": "sadness",
+      "intensity": 8,
+      "polarity": "negative"
+    },
+    "devastated": {
+      "category": "sadness",
+      "intensity": 9,
+      "polarity": "negative"
+    },
+    "gloomy": {
+      "category": "sadness",
+      "intensity": 5,
+      "polarity": "negative"
+    },
+    "anxious": {
+      "category": "fear",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "nervous": {
+      "category": "fear",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "uneasy": {
+      "category": "fear",
+      "intensity": 5,
+      "polarity": "negative"
+    },
+    "terrified": {
+      "category": "fear",
+      "intensity": 9,
+      "polarity": "negative"
+    },
+    "apprehensive": {
+      "category": "fear",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "overwhelmed": {
+      "category": "fear",
+      "intensity": 8,
+      "polarity": "negative"
+    },
+    "insecure": {
+      "category": "fear",
+      "intensity": 6,
+      "polarity": "negative"
+    },
+    "disgusted": {
+      "category": "disgust",
+      "intensity": 8,
+      "polarity": "negative"
+    },
+    "appalled": {
+      "category": "disgust",
+      "intensity": 8,
+      "polarity": "negative"
+    },
+    "repelled": {
+      "category": "disgust",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "contemptuous": {
+      "category": "disgust",
+      "intensity": 7,
+      "polarity": "negative"
+    },
+    "astonished": {
+      "category": "surprise",
+      "intensity": 8,
+      "polarity": "neutral"
+    },
+    "stunned": {
+      "category": "surprise",
+      "intensity": 8,
+      "polarity": "neutral"
+    },
+    "puzzled": {
+      "category": "surprise",
+      "intensity": 5,
+      "polarity": "neutral"
+    },
+    "baffled": {
+      "category": "surprise",
+      "intensity": 6,
+      "polarity": "neutral"
+    },
+    "intrigued": {
+      "category": "surprise",
+      "intensity": 6,
+      "polarity": "positive"
+    },
+    "shocked": {
+      "category": "surprise",
+      "intensity": 8,
+      "polarity": "neutral"
+    }
+  }
+}

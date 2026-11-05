@@ -6,7 +6,8 @@
 
 ## 功能
 
-- 🎤 **实时语音识别**：基于 Sherpa-ONNX，完全离线，中文优化
+- 🌐 **中 / 英双语练习**：右上角「中 / EN」一键切换；英文模式下词库、字幕高亮、实时提示和分析报告全部切换为英文（见下方「英文模式」）
+- 🎤 **实时语音识别**：基于 Sherpa-ONNX，完全离线，中英双语模型
 - 📝 **全屏字幕显示**：黑底大字，实时显示你说的每一句话
 - 🔍 **词库分析**：自动检测填充词、犹豫词、笼统词，给出精准替代
 - 🤖 **AI反馈**：支持 Groq/OpenAI/DeepSeek/Ollama 多后端
@@ -72,6 +73,26 @@ npm start
 4. **右侧面板**每50字会给出AI实时反馈
 5. **说完后点击「结束」** → 可以点「生成报告」获取完整分析
 
+## 英文模式
+
+在主界面右上角点「中 / EN」或在设置页选择 Practice language，即可切换到英文练习：
+
+- **词库**：`data/english-lexicon.json`，按整词 / 短语匹配（大小写不敏感，支持多词短语如 `you know`、`a little bit`、`at the end of the day`）
+  - 填充词 28 个：um, uh, like, you know, I mean, basically, actually, kind of, sort of, honestly…
+  - 犹豫词 31 个：I think, I guess, maybe, probably, it seems like, a bit, somewhat, to some extent, I'm not sure but…
+  - 笼统词 → 精准词 36 组：good → effective / rigorous / compelling；a lot → dozens of / roughly 80%；thing → factor / mechanism…
+  - 情绪词 42 个，带类别和强度
+  - `like` 只在口头禅位置（"it was like, um"）才算填充词，作动词 / 介词（"I like it"、"like this one"）不标记
+- **实时提示**：英文教练 prompt，每次一条 ≤ 6 词；在中文版规则之外额外加了语法错误和不地道表达的即时纠正
+- **分析报告**：英文版六维报告，多一节「Language accuracy」表格，列出语法 / 搭配 / 语序问题和地道说法
+- **语音识别**：英文模式自动改用 Sherpa-ONNX 的英文 zipformer 流式模型（识别率明显高于双语模型）；没下载时自动退回双语模型并在反馈栏提示。下载方式：
+
+```bash
+cd models
+wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-streaming-zipformer-en-2023-06-26.tar.bz2
+tar xvf sherpa-onnx-streaming-zipformer-en-2023-06-26.tar.bz2
+```
+
 ## 字幕颜色含义
 
 | 颜色 | 含义 |
@@ -130,7 +151,8 @@ npm run dev
 │   ├── ai-feedback.js   # AI反馈
 │   └── prompts.js       # Prompt模板
 ├── data/
-│   └── emotion-lexicon.json
+│   ├── emotion-lexicon.json   # 中文情感词库
+│   └── english-lexicon.json   # 英文词库
 └── models/              # Sherpa-ONNX模型（需下载）
 ```
 

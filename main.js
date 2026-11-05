@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { initASR, feedAudio, stopRecognition } = require('./lib/asr');
-const { loadLexicon, analyzeText } = require('./lib/lexicon');
+const { loadLexicon, analyzeText, highlightText, setLanguage } = require('./lib/lexicon');
 const { sendFeedback, sendReport, testConnection } = require('./lib/ai-feedback');
 
 // 覆盖应用显示名称（菜单栏、Dock、任务栏、窗口标题）
@@ -51,6 +51,7 @@ function loadSettings() {
     if (!raw.providers) {
       const migrated = {
         provider: raw.provider || 'deepseek',
+        language: raw.language || 'zh',
         providers: {
           openai: { ...DEFAULT_PROVIDER_CONFIGS.openai },
           deepseek: { ...DEFAULT_PROVIDER_CONFIGS.deepseek },
@@ -68,6 +69,7 @@ function loadSettings() {
       saveSettings(migrated);
       return migrated;
     }
+    if (!raw.language) raw.language = 'zh';
     // 确保每个 provider 都有完整的默认字段
     for (const key of Object.keys(DEFAULT_PROVIDER_CONFIGS)) {
       if (!raw.providers[key]) {
@@ -80,6 +82,7 @@ function loadSettings() {
   }
   return {
     provider: 'deepseek',
+    language: 'zh',
     providers: JSON.parse(JSON.stringify(DEFAULT_PROVIDER_CONFIGS))
   };
 }
@@ -87,6 +90,12 @@ function loadSettings() {
 function saveSettings(settings) {
   const settingsPath = getSettingsPath();
   fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  setLanguage(settings.language || 'zh');
+}
+
+/** Current practice language: 'zh' | 'en' */
+function getLanguageSetting() {
+  return loadSettings().language || 'zh';
 }
 
 /** 获取当前选中 provider 的配置 */
@@ -206,6 +215,7 @@ app.whenReady().then(() => {
 
   // 加载词库
   loadLexicon();
+  setLanguage(getLanguageSetting());
 
   createMainWindow();
 
@@ -260,9 +270,9 @@ ipcMain.handle('close-current-window', (event) => {
 // 语音识别相关 - Web Audio方案
 ipcMain.handle('init-asr', async () => {
   try {
-    await initASR();
+    const info = await initASR(getLanguageSetting());
     asrReady = true;
-    return { success: true };
+    return { success: true, model: info.model };
   } catch (error) {
     return { success: false, error: error.message };
   }
@@ -290,7 +300,21 @@ ipcMain.handle('test-llm-connection', async (event, settings) => {
 
 // 词库分析
 ipcMain.handle('analyze-text', (event, text) => {
-  return analyzeText(text);
+  return analyzeText(text, getLanguageSetting());
+});
+
+// 字幕高亮（主进程统一处理，按语言分流）
+ipcMain.handle('highlight-text', (event, text) => {
+  return highlightText(text, getLanguageSetting());
+});
+
+// 语言切换（zh / en）
+ipcMain.handle('get-language', () => getLanguageSetting());
+ipcMain.handle('set-language', (event, lang) => {
+  const settings = loadSettings();
+  settings.language = lang === 'en' ? 'en' : 'zh';
+  saveSettings(settings);
+  return settings.language;
 });
 
 // 文件保存
@@ -315,7 +339,7 @@ ipcMain.handle('get-realtime-feedback', async (event, text) => {
   const providerConfig = getCurrentProviderSettings(settings);
   const customPrompt = loadCustomPrompt();
   try {
-    const feedback = await sendFeedback(text, { ...settings, ...providerConfig }, customPrompt);
+    const feedback = await sendFeedback(text, { ...settings, ...providerConfig }, customPrompt, settings.language || 'zh');
     return { success: true, feedback };
   } catch (error) {
     return { success: false, error: error.message };
@@ -327,7 +351,7 @@ ipcMain.handle('get-final-report', async (event, { fullText, stats }) => {
   const providerConfig = getCurrentProviderSettings(settings);
   const customPrompt = loadCustomPrompt();
   try {
-    const report = await sendReport(fullText, stats, { ...settings, ...providerConfig }, customPrompt);
+    const report = await sendReport(fullText, stats, { ...settings, ...providerConfig }, customPrompt, settings.language || 'zh');
     return { success: true, report };
   } catch (error) {
     return { success: false, error: error.message };
