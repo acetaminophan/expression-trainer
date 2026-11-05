@@ -161,8 +161,9 @@ function createSettingsWindow() {
 
   settingsWindow = new BrowserWindow({
     width: 600,
-    height: 500,
-    resizable: false,
+    height: 640,
+    minHeight: 500,
+    resizable: true,
     backgroundColor: '#1a1a1a',
     titleBarStyle: 'hiddenInset',
     parent: mainWindow,
