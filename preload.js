@@ -34,6 +34,9 @@ contextBridge.exposeInMainWorld('api', {
   getFinalReport: (data) => ipcRenderer.invoke('get-final-report', data),
   testLLMConnection: (settings) => ipcRenderer.invoke('test-llm-connection', settings),
 
+  // Renderer -> terminal log (debugging)
+  log: (msg) => ipcRenderer.invoke('renderer-log', msg),
+
   // 文件保存
   saveFile: (content, filename) => ipcRenderer.invoke('save-file', content, filename),
 });

@@ -318,6 +318,9 @@ ipcMain.handle('set-language', (event, lang) => {
   return settings.language;
 });
 
+// Renderer log passthrough so audio problems show up in the terminal
+ipcMain.handle('renderer-log', (event, msg) => { console.log(msg); });
+
 // 文件保存
 ipcMain.handle('save-file', async (event, content, filename) => {
   const { dialog } = require('electron');

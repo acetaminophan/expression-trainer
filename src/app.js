@@ -115,14 +115,13 @@ class ExpressionTrainer {
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true, channelCount: 1 }
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       // Use the device's native rate; forcing 16 kHz here is not reliably honoured by
       // Chromium on macOS and produces garbled recognition. sherpa resamples itself.
       this.audioContext = new AudioContext();
+      if (this.audioContext.state !== 'running') await this.audioContext.resume();
       const sampleRate = this.audioContext.sampleRate;
-      console.log('[audio] context sample rate', sampleRate);
+      window.api.log(`[audio] mic ok, context ${this.audioContext.state}, ${sampleRate} Hz, track: ${stream.getAudioTracks()[0]?.label || 'unknown'}`);
       const source = this.audioContext.createMediaStreamSource(stream);
       this.audioProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
       this.audioProcessor.onaudioprocess = async (e) => {
@@ -135,7 +134,9 @@ class ExpressionTrainer {
       this.audioProcessor.connect(this.audioContext.destination);
       this.mediaStream = stream;
     } catch (err) {
+      window.api.log(`[audio] mic failed: ${err.name}: ${err.message}`);
       this.showError(`麦克风访问失败: ${err.message}`);
+      await window.api.stopASR();
       return;
     }
 
