@@ -227,10 +227,10 @@ app.whenReady().then(() => {
   });
 });
 
+// Quit on every platform when the window closes, so that re-running
+// `npm start` after a code change always loads the new code.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  app.quit();
 });
 
 // IPC Handlers
